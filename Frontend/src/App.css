@@ -22,6 +22,7 @@
 	--col-info: #94a3b8;
 
 	/* ================ FONTS SIZES ================ */
+	--font-size-tiny: 0.75rem;
 	--font-size-small: 1rem;
 	--font-size-medium: 1.25rem;
 	--font-size-large: 2.5rem;
@@ -36,9 +37,8 @@
 
 	/* ================ TRASITIONS ================ */
 	--transtion-default:
-		opacity 0.2s ease, transform 0.2s ease, visibility 0.2s ease,
-		color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease,
-		box-shadow 0.2s ease, font-weight 0.2s ease, text-decoration-line 0.2s ease;
+		opacity 0.2s ease, transform 0.2s ease, visibility 0.2s ease, color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease,
+		font-weight 0.2s ease, text-decoration-line 0.2s ease;
 	--transition-speed-fast: 0.1s;
 	--transition-speed-medium: 0.2s;
 }
@@ -88,6 +88,10 @@
 	font-size: var(--font-size-small);
 }
 
+.text-size4 {
+	font-size: var(--font-size-tiny);
+}
+
 /* ======================================================================== */
 /*! STYLES BEGIN */
 /* ======================================================================== */
@@ -132,7 +136,15 @@ body {
 /* ======================================================================== */
 .flex-row-center {
 	display: flex;
-	direction: row;
+	flex-direction: row;
+	align-items: center;
+	justify-content: center;
+}
+
+.flex-column-center {
+	background-color: gray;
+	display: flex;
+	flex-direction: column;
 	align-items: center;
 	justify-content: center;
 }

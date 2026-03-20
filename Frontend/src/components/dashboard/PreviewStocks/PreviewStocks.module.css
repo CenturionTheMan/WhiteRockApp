@@ -1,0 +1,12 @@
+.previewHolder {
+}
+
+.cardHolder {
+	background-color: var(--col-bg2);
+	border-radius: var(--corner-radius);
+	margin: 10px;
+	padding: 10px;
+}
+
+.cardLastPrice {
+}

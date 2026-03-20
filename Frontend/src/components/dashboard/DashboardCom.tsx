@@ -17,10 +17,10 @@ const DashboardCom = () => {
 		},
 	];
 	return (
-		<>
+		<div className="flex-column-center">
 			<OverviewCom />
 			<PreviewStocks stocksInfo={stocksInfo} />
-		</>
+		</div>
 	);
 };
 
