@@ -1,42 +1,138 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400&display=swap");
+
+:root {
+	/* ================ COLORS ================ */
+	--col-bg1: #101319;
+	--col-bg2: #1d2026;
+	--col-bg3: #272a31;
+
+	--col-tex1: #e1e2eb;
+	--col-tex2: #bacbb9;
+
+	--col-primary1: #75ff9e;
+	--col-primary1-rgb: 117, 255, 158;
+	--col-primary2: #34d399;
+	--col-primary3: #003918;
+
+	--col-neutral1: #ffdf9e;
+
+	--col-negative1: #ffb4ab;
+
+	--col-info: #94a3b8;
+
+	/* ================ FONTS SIZES ================ */
+	--font-size-small: 1rem;
+	--font-size-medium: 1.25rem;
+	--font-size-large: 2.5rem;
+
+	/* ================ FONTS WEIGHTS ================ */
+	--font-weight-regular: 400;
+	--font-weight-bold: 700;
+	--font-weight-extrabold: 800;
+
+	/* ================ CORNERS ================ */
+	--corner-radius: 8px;
+
+	/* ================ TRASITIONS ================ */
+	--transtion-default:
+		opacity 0.2s ease, transform 0.2s ease, visibility 0.2s ease,
+		color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease,
+		box-shadow 0.2s ease, font-weight 0.2s ease, text-decoration-line 0.2s ease;
+	--transition-speed-fast: 0.1s;
+	--transition-speed-medium: 0.2s;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+@media only screen and (max-width: 600px) {
+	:root {
+		--font-size-small: 0.75rem;
+		--font-size-medium: 1rem;
+		--font-size-large: 1.25rem;
+	}
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/* ================= TEST PRESETS ================= */
+.text-style1 {
+	font-family: "Manrope", sans-serif;
+	font-weight: var(--font-weight-extrabold);
+	color: var(--col-tex1);
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+.text-style2 {
+	font-family: "Manrope", sans-serif;
+	font-weight: var(--font-weight-bold);
+	color: var(--col-tex1);
 }
 
-.card {
-  padding: 2em;
+.text-style3 {
+	font-family: "Manrope", sans-serif;
+	font-weight: var(--font-weight-regular);
+	color: var(--col-tex1);
 }
 
-.read-the-docs {
-  color: #888;
+.text-style4 {
+	font-family: "Inter", sans-serif;
+	font-weight: var(--font-weight-regular);
+	color: var(--col-tex2);
+}
+
+.text-size1 {
+	font-size: var(--font-size-large);
+}
+
+.text-size2 {
+	font-size: var(--font-size-medium);
+}
+
+.text-size3 {
+	font-size: var(--font-size-small);
+}
+
+/* ======================================================================== */
+/*! STYLES BEGIN */
+/* ======================================================================== */
+
+body {
+	margin: 0;
+	padding: 0;
+
+	background-color: var(--col-bg1);
+
+	font-optical-sizing: auto;
+	font-style: normal;
+}
+
+/* ======================================================================== */
+/*! APP */
+/* ======================================================================== */
+
+.app-container {
+	min-height: 100vh;
+	display: flex;
+	flex-direction: column;
+	align-items: stretch;
+	box-sizing: border-box;
+}
+
+.navbar-holder {
+	width: 100dvw;
+	height: 80px;
+	flex-shrink: 0;
+	position: sticky;
+	top: 0;
+	z-index: 10;
+}
+
+.content-holder {
+	flex: 1;
+}
+
+/* ======================================================================== */
+/*! COMMON */
+/* ======================================================================== */
+.flex-row-center {
+	display: flex;
+	direction: row;
+	align-items: center;
+	justify-content: center;
 }
