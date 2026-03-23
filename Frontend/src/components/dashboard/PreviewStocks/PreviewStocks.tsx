@@ -1,6 +1,7 @@
 import styles from "./PreviewStocks.module.css";
 import React, { useState } from "react";
 import type StockInfo from "./../../../interfaces/StockInfo";
+import SimpleChart from "../../common/SimpleChart/SimpleChart";
 
 const PreviewStocks = ({ stocksInfo }: { stocksInfo: StockInfo[] }) => {
 	return (
@@ -22,6 +23,7 @@ const Card = ({ info }: { info: StockInfo }) => {
 				<div>{info.values.at(-1)}</div>
 				<span>{diff > 0 ? `+${diff.toFixed(2)}%` : `${diff.toFixed(2)}%`}</span>
 			</div>
+			<SimpleChart data={info.values} color="red"/>
 		</div>
 	);
 };
