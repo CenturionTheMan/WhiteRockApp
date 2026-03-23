@@ -1,12 +1,31 @@
 .previewHolder {
+  /* background-color: red; */
+}
+
+.previewHolder > * {
+  margin-left: 10px;
+}
+
+.previewHolder > *:first-child {
+  margin-left: 0px;
 }
 
 .cardHolder {
+  margin-top: 10px;
+  flex: 1;
   background-color: var(--col-bg2);
   border-radius: var(--corner-radius);
-  margin: 10px;
-  padding: 10px;
+  padding: 20px;
 }
 
 .cardLastPrice {
+  display: flex;
+  flex-direction: row;
+  align-items: end;
+  /* justify-content: center; */
+}
+
+.cardLastPrice > span {
+  margin-left: 5px;
+  margin-bottom: 5px;
 }

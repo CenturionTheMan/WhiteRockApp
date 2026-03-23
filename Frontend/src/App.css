@@ -22,10 +22,10 @@
   --col-info: #94a3b8;
 
   /* ================ FONTS SIZES ================ */
-  --font-size-tiny: 0.75rem;
-  --font-size-small: 1rem;
-  --font-size-medium: 1.25rem;
-  --font-size-large: 2.5rem;
+  --font-size-tiny: 1rem;
+  --font-size-small: 1.5rem;
+  --font-size-medium: 2.1rem;
+  --font-size-large: 3rem;
 
   /* ================ FONTS WEIGHTS ================ */
   --font-weight-regular: 400;
@@ -130,6 +130,9 @@ body {
 
 .content-holder {
   flex: 1;
+  margin-left: 15dvw;
+  margin-right: 15dvw;
+  align-items: stretch;
 }
 
 /* ======================================================================== */
