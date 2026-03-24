@@ -1,13 +1,14 @@
-import { useState } from "react";
 import "./App.css";
-import NavigationCom from "./components/NavigationCom";
 import DashboardCom from "./components/dashboard/DashboardCom";
+import NavigationCom from "./components/navbar/NavigationCom/NavigationCom";
 
 function App() {
   return (
     <>
       <div className="app-container">
-        <div className="navbar-holder">NAV</div>
+        <div className="navbar-holder">
+          <NavigationCom />
+        </div>
         <div className="content-holder">
           <DashboardCom />
         </div>

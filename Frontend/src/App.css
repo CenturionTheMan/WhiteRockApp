@@ -3,9 +3,12 @@
 
 :root {
   /* ================ COLORS ================ */
+  --col-bg0: rgba(2, 6, 23, 0.8);
   --col-bg1: #101319;
   --col-bg2: #1d2026;
   --col-bg3: #272a31;
+
+  --col-bg-accent1-rgb: 25, 28, 34;
 
   --col-tex1: #e1e2eb;
   --col-tex2: #bacbb9;
@@ -121,7 +124,7 @@ body {
 
 .navbar-holder {
   width: 100dvw;
-  height: 80px;
+  height: 130px;
   flex-shrink: 0;
   position: sticky;
   top: 0;
@@ -130,6 +133,7 @@ body {
 
 .content-holder {
   flex: 1;
+  margin-top: 10px;
   margin-left: 15dvw;
   margin-right: 15dvw;
   align-items: stretch;
