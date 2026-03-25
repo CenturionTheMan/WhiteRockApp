@@ -1,31 +1,28 @@
 .previewHolder {
-  /* background-color: red; */
-}
-
-.previewHolder > * {
-  margin-left: 10px;
-}
-
-.previewHolder > *:first-child {
-  margin-left: 0px;
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	column-gap: 10px;
+	justify-content: space-between;
+	align-items: stretch;
 }
 
 .cardHolder {
-  margin-top: 10px;
-  flex: 1;
-  background-color: var(--col-bg2);
-  border-radius: var(--corner-radius);
-  padding: 20px;
+	margin-top: 10px;
+	background-color: var(--col-bg2);
+	border-radius: var(--corner-radius);
+	padding: 20px;
+	width: 15dvw;
+	min-width: max-content;
 }
 
 .cardLastPrice {
-  display: flex;
-  flex-direction: row;
-  align-items: end;
-  /* justify-content: center; */
+	display: flex;
+	flex-direction: row;
+	align-items: end;
 }
 
 .cardLastPrice > span {
-  margin-left: 5px;
-  margin-bottom: 5px;
+	margin-left: 5px;
+	margin-bottom: 5px;
 }
