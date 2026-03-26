@@ -1,0 +1,70 @@
+.filters {
+	margin-top: 20px;
+	display: flex;
+	flex-direction: row;
+	align-items: end;
+	justify-content: end;
+	column-gap: 10px;
+}
+
+.filterBtn {
+	padding-left: 15px;
+	padding-right: 15px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	border-radius: var(--corner-radius);
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	column-gap: 5px;
+	background-color: var(--col-bg2);
+	cursor: pointer;
+}
+
+.filterBtn:hover {
+	background-color: var(--col-bg3);
+}
+
+.filterBtn > img {
+	width: auto;
+	height: 30px;
+}
+
+.table {
+	margin-top: 20px;
+	width: 100%;
+	border-collapse: collapse;
+}
+
+.table th {
+	text-align: left;
+	font-size: var(--font-size-tiny);
+	color: var(--col-tex2);
+	padding: 10px 40px;
+}
+.table th:nth-child(6) {
+	text-align: right;
+}
+
+.table td {
+	padding: 10px 40px;
+	vertical-align: middle;
+}
+
+.table tbody {
+	background-color: var(--col-bg2);
+}
+
+.table tbody tr {
+	border-bottom: 1px solid var(--col-bg3);
+}
+.table {
+	border-spacing: 0 10px;
+}
+.TableAlSignal {
+	width: 50%;
+	min-width: fit-content;
+	padding: 10px;
+	text-align: center;
+	border-radius: var(--corner-radius);
+}

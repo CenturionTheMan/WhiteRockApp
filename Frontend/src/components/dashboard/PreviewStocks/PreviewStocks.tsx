@@ -35,7 +35,7 @@ const Card = ({ info }: { info: StockInfo }) => {
 						color: GetStyleColor(diff),
 					}}
 				>
-					{diff >= 0 ? `+${diff.toFixed(2)}%` : `-${diff.toFixed(2)}%`}
+					{diff >= 0 ? `+${diff.toFixed(2)}%` : `${diff.toFixed(2)}%`}
 				</span>
 			</div>
 			<SimpleChart data={info.values} color={GetStyleColor(diff)} />

@@ -1,0 +1,35 @@
+.holder {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	column-gap: 10px;
+	width: 100%;
+}
+
+/* Background track */
+.fillHolder {
+	flex: 1;
+	height: 8px;
+	border-radius: 999px;
+	overflow: hidden;
+	position: relative;
+}
+
+/* Filled part */
+.fill {
+	height: 100%;
+	width: 0%;
+	max-width: 100%;
+	border-radius: inherit;
+}
+
+/* Percentage text */
+.text {
+	min-width: 40px;
+	text-align: right;
+	font-size: var(--font-size-tiny);
+	font-family: "Manrope", sans-serif;
+	font-weight: var(--font-weight-regular);
+	color: var(--col-tex1);
+	cursor: default;
+}
