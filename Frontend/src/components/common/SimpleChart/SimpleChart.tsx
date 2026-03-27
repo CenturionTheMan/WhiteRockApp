@@ -1,6 +1,7 @@
 import { LineChart, Line, ResponsiveContainer, YAxis } from "recharts";
 import type { CurveType } from "recharts/types/shape/Curve";
 import type { DotType } from "recharts/types/util/types";
+import styles from "./SimpleChart.module.css";
 
 type Props = {
 	data: number[];
@@ -30,11 +31,8 @@ export default function SimpleChart({ data, color = "#4facfe", height = 50, widt
 		<div
 			style={{
 				background: `linear-gradient(to bottom, transparent 50%, ${hexToRgba(color, 0.1)} 100%)`, // Dynamic gradient
-				padding: 10,
-				borderRadius: 8,
-				userSelect: "none",
-				outline: "none",
 			}}
+			className={styles.chartHolder}
 			tabIndex={-1}
 		>
 			<ResponsiveContainer width={width} height={height}>

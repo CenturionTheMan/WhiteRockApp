@@ -2,7 +2,7 @@ import "./App.css";
 import { Routes, Route } from "react-router-dom";
 import Layout from "./components/LayoutCom";
 import DashboardCom from "./components/dashboard/DashboardCom";
-import ViewListCom from "./components/list/ViewListCom/ViewListCom";
+import ViewListCom from "./components/signals/SignalsCom/SignalsCom";
 
 function App() {
 	return (

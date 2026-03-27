@@ -89,25 +89,3 @@
 .selectedRow {
 	background-color: rgba(var(--col-primary1-rgb), 0.1);
 }
-
-.detailsDiv {
-	margin-top: 20px;
-	margin-bottom: 20px;
-	padding: 10px;
-
-	height: 500px;
-
-	opacity: 0;
-	overflow: hidden;
-	display: none;
-
-	border-radius: var(--corner-radius);
-	background-color: var(--col-bg2);
-
-	transition: opacity 0.1s ease;
-}
-
-.detailsDiv.show {
-	display: block;
-	opacity: 1;
-}

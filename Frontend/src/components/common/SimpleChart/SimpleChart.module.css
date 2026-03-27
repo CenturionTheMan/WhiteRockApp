@@ -1,0 +1,9 @@
+.chartHolder {
+	padding: 10px;
+	border-radius: var(--corner-radius);
+	outline: none;
+}
+
+.chartHolder svg {
+	outline: none;
+}
