@@ -4,9 +4,10 @@ import sortIcon from "./../../../assets/sort.svg";
 import sortActIcon from "./../../../assets/sortActive.svg";
 import filterIcon from "./../../../assets/filter.svg";
 import filterActIcon from "./../../../assets/filterActive.svg";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import SimpleChart from "../../common/SimpleChart/SimpleChart";
 import ProgressBarCom from "../../common/ProgressBarCom/ProgressBarCom";
+import { useLocation, useNavigate, type Location } from "react-router-dom";
 
 export interface TableRowData {
 	ticker: string;
@@ -112,12 +113,41 @@ const GetConfidenceColor = (confidence: number, alpha = 1) => {
 	else return `rgba(255, 223, 158, ${alpha})`; // --col-neutral1
 };
 
+const getTickerFromUrl = (location: Location) => {
+	const queryParams = new URLSearchParams(location.search);
+	const ticker = queryParams.get("ticker") ?? "";
+	return ticker;
+};
+
 const SignalTable = () => {
+	const navigate = useNavigate();
+	const location = useLocation();
+	const detailsRef = useRef<HTMLDivElement>(null);
+
 	const [rows, setRows] = useState<TableRowData[]>([]);
+	const [selected, setSelected] = useState<string>(getTickerFromUrl(location));
 
 	useEffect(() => {
 		setRows(mockTableData);
 	}, []);
+
+	const handleRowSelected = (ticker: string) => {
+		setSelected(ticker);
+		navigate(`${location.pathname}?ticker=${ticker}`);
+
+		setTimeout(() => {
+			if (detailsRef.current) {
+				detailsRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+			}
+		}, 0);
+	};
+
+	useEffect(() => {
+		const el = detailsRef.current;
+		if (el && selected && rows.length > 0) {
+			el.scrollIntoView({ behavior: "smooth", block: "end" });
+		}
+	}, [rows]);
 
 	return (
 		<>
@@ -146,7 +176,7 @@ const SignalTable = () => {
 
 					<tbody>
 						{rows.map((r) => (
-							<tr key={r.ticker}>
+							<tr key={r.ticker} className={`${r.ticker === selected ? styles.selectedRow : ""}`} onClick={() => handleRowSelected(r.ticker)}>
 								<td className="text-style2 text-size3">{r.ticker}</td>
 								<td className="text-style3 text-size3">{`$${r.lastPrices.at(-1) ?? "??"}`}</td>
 								<td
@@ -180,6 +210,11 @@ const SignalTable = () => {
 						))}
 					</tbody>
 				</table>
+			</div>
+
+			<div ref={detailsRef} id="tickerDetails" className={`${styles.detailsDiv} ${selected ? styles.show : ""}`}>
+				<h3>Details for {selected}</h3>
+				<p>More info about {selected} goes here...</p>
 			</div>
 		</>
 	);
