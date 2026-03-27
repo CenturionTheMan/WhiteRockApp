@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import styles from "./ProgressBarCom.module.css";
 
 const ProgressBarCom = ({
@@ -9,13 +10,17 @@ const ProgressBarCom = ({
 	backgroundColor?: string;
 	fillColor?: string;
 }) => {
+	const [displayValue, setDisplayValue] = useState(0);
+	useEffect(() => {
+		setDisplayValue(value);
+	}, [value]);
 	return (
 		<div className={styles.holder}>
 			<div className={styles.fillHolder} style={{ backgroundColor }}>
 				<div
 					className={styles.fill}
 					style={{
-						width: `${value}%`,
+						width: `${displayValue}%`,
 						backgroundColor: fillColor,
 					}}
 				/>

@@ -30,10 +30,24 @@
 	height: 30px;
 }
 
-.table {
+.tableWrapper {
 	margin-top: 20px;
+	min-height: 200px;
+	max-height: 500px;
+	overflow-y: auto;
+	padding-right: 4px;
+}
+
+.table {
 	width: 100%;
 	border-collapse: collapse;
+}
+
+.table thead th {
+	position: sticky;
+	top: 0;
+	background-color: var(--col-bg1);
+	z-index: 1;
 }
 
 .table th {
@@ -58,9 +72,7 @@
 .table tbody tr {
 	border-bottom: 1px solid var(--col-bg3);
 }
-.table {
-	border-spacing: 0 10px;
-}
+
 .TableAlSignal {
 	width: 50%;
 	min-width: fit-content;

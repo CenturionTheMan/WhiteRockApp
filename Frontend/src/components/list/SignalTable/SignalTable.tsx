@@ -131,54 +131,56 @@ const SignalTable = () => {
 					<span className="text-size4 text-style3">Sort</span>
 				</div>
 			</div>
-			<table className={styles.table}>
-				<thead>
-					<tr>
-						<th>ASSET</th>
-						<th>LAST PRICE</th>
-						<th>24H CHANGE</th>
-						<th>AI SIGNAL</th>
-						<th>CONFIDENCE</th>
-						<th>MOMENTUM</th>
-					</tr>
-				</thead>
-
-				<tbody>
-					{rows.map((r) => (
-						<tr key={r.ticker}>
-							<td className="text-style2 text-size3">{r.ticker}</td>
-							<td className="text-style3 text-size3">{`$${r.lastPrices.at(-1) ?? "??"}`}</td>
-							<td
-								className="text-style3 text-size3"
-								style={{
-									color: GetStyleColor(CalcPriceChange(r.lastPrices)),
-								}}
-							>
-								{CalcPriceChangeStr(r.lastPrices)}
-							</td>
-							<td>
-								<div
-									style={{
-										color: GetCallColor(r.call, 1),
-										backgroundColor: GetCallColor(r.call, 0.1),
-										borderStyle: "solid",
-										borderWidth: "1px",
-									}}
-									className={`text-style2 text-size4 ${styles.TableAlSignal}`}
-								>
-									{r.call}
-								</div>
-							</td>
-							<td>
-								<ProgressBarCom value={r.confidence * 100} fillColor={GetConfidenceColor(r.confidence)} />
-							</td>
-							<td>
-								<SimpleChart data={r.lastPrices} dot={false} type="bump" color={GetStyleColor(CalcPriceChange(r.lastPrices))} />
-							</td>
+			<div className={styles.tableWrapper}>
+				<table className={styles.table}>
+					<thead>
+						<tr>
+							<th>ASSET</th>
+							<th>LAST PRICE</th>
+							<th>24H CHANGE</th>
+							<th>AI SIGNAL</th>
+							<th>CONFIDENCE</th>
+							<th>MOMENTUM</th>
 						</tr>
-					))}
-				</tbody>
-			</table>
+					</thead>
+
+					<tbody>
+						{rows.map((r) => (
+							<tr key={r.ticker}>
+								<td className="text-style2 text-size3">{r.ticker}</td>
+								<td className="text-style3 text-size3">{`$${r.lastPrices.at(-1) ?? "??"}`}</td>
+								<td
+									className="text-style3 text-size3"
+									style={{
+										color: GetStyleColor(CalcPriceChange(r.lastPrices)),
+									}}
+								>
+									{CalcPriceChangeStr(r.lastPrices)}
+								</td>
+								<td>
+									<div
+										style={{
+											color: GetCallColor(r.call, 1),
+											backgroundColor: GetCallColor(r.call, 0.1),
+											borderStyle: "solid",
+											borderWidth: "1px",
+										}}
+										className={`text-style2 text-size4 ${styles.TableAlSignal}`}
+									>
+										{r.call}
+									</div>
+								</td>
+								<td>
+									<ProgressBarCom value={r.confidence * 100} fillColor={GetConfidenceColor(r.confidence)} />
+								</td>
+								<td>
+									<SimpleChart data={r.lastPrices} dot={false} type="bump" color={GetStyleColor(CalcPriceChange(r.lastPrices))} />
+								</td>
+							</tr>
+						))}
+					</tbody>
+				</table>
+			</div>
 		</>
 	);
 };

@@ -7,13 +7,14 @@ import listActImg from "./../../../assets/listActive.svg";
 import searchIcon from "./../../../assets/search.svg";
 import helpHelp from "./../../../assets/help.svg";
 import helpActHelp from "./../../../assets/helpActive.svg";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import type { NavLink } from "./../../../interfaces/NavLink";
+import { toNavLink, type NavLink } from "./../../../interfaces/NavLink";
 
 const NavigationCom = () => {
-	const [activeNav, setActiveNav] = useState<NavLink>("/");
 	const navigate = useNavigate();
+	const location = useLocation();
+	const [activeNav, setActiveNav] = useState<NavLink>(toNavLink(location.pathname) ?? "/");
 
 	const handleViewChange = (link: NavLink) => {
 		setActiveNav(link);

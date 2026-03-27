@@ -54,7 +54,7 @@
 	}
 }
 
-/* ================= TEST PRESETS ================= */
+/* ================= TEXT PRESETS ================= */
 .text-style1 {
 	font-family: "Manrope", sans-serif;
 	font-weight: var(--font-weight-extrabold);
@@ -114,6 +114,27 @@ body,
 	height: 100%;
 }
 
+/* ======================================================================== */
+/*! SCROLLBARS */
+/* ======================================================================== */
+/* ALL scrollbars */
+*::-webkit-scrollbar {
+	width: 6px;
+	height: 6px;
+}
+
+*::-webkit-scrollbar-thumb {
+	background: var(--col-bg3);
+	border-radius: 10px;
+}
+
+*::-webkit-scrollbar-track {
+	background: transparent;
+}
+* {
+	scrollbar-width: thin;
+	scrollbar-color: var(--col-bg3) transparent;
+}
 /* ======================================================================== */
 /*! APP */
 /* ======================================================================== */
