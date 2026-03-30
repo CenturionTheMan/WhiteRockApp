@@ -1,11 +1,13 @@
 import { useLocation } from "react-router-dom";
 import styles from "./StockDetailsCom.module.css";
 import type { SignalCall } from "../../../interfaces/SignalModel";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { LineChart, Line, ResponsiveContainer, YAxis, XAxis, CartesianGrid, Tooltip } from "recharts";
 import type { CurveType } from "recharts/types/shape/Curve";
 import type { DotType } from "recharts/types/util/types";
 import { sign } from "chart.js/helpers";
+import { useStockByTicker } from "../../../hooks/useStocks";
+import { useSignalsByTicker, useSignalsLatest } from "../../../hooks/useSignals";
 
 export type StockDetailsData = {
 	ticker: string;
@@ -18,38 +20,6 @@ export type StockDetailsData = {
 		date: Date;
 		signal: SignalCall;
 	}[];
-};
-
-const getData = (ticker: string): StockDetailsData => {
-	const now = new Date();
-
-	const daysAgo = (days: number) => {
-		const d = new Date(now);
-		d.setDate(d.getDate() - days);
-		return d;
-	};
-
-	let price = 100;
-
-	const prices: { date: Date; price: number }[] = [];
-
-	for (let i = 10; i >= 0; i--) {
-		price += Math.random() * 4 - 2; // random walk
-		prices.push({ date: daysAgo(i), price: Number(price.toFixed(2)) });
-	}
-
-	const calls: { date: Date; signal: SignalCall }[] = [
-		{ date: daysAgo(7), signal: "BUY" },
-		{ date: daysAgo(3), signal: "HOLD" },
-		{ date: daysAgo(1), signal: "SELL" },
-	];
-
-	return {
-		ticker,
-		description: "Randomly generated stock data",
-		prices,
-		calls,
-	};
 };
 
 const GetStyleColor = (val: number) => {
@@ -139,11 +109,24 @@ const createChart = (data: StockDetailsData) => {
 };
 
 const StockDetailsCom = ({ ticker }: { ticker: string }) => {
-	const [data, setData] = useState<StockDetailsData | null>(null);
+	const now = new Date();
+	const pastDate = new Date(now);
+	pastDate.setDate(pastDate.getDate() - 30);
 
-	useEffect(() => {
-		setData(getData(ticker));
-	}, [ticker]);
+	const stockFetch = useStockByTicker(ticker);
+	const signalsFetch = useSignalsByTicker(ticker);
+
+	const data = useMemo<StockDetailsData | null>(() => {
+		if (!stockFetch.data || !signalsFetch.data) return null;
+
+		const details: StockDetailsData = {
+			ticker: stockFetch.data.ticker,
+			description: stockFetch.data.subtext,
+			prices: stockFetch.data.values,
+			calls: signalsFetch.data.map((sig) => ({ date: sig.date, signal: sig.call })),
+		};
+		return details;
+	}, [ticker, stockFetch.data, signalsFetch.data]);
 
 	const render = () => {
 		if (data === null) {

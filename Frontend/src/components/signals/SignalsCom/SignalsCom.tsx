@@ -17,7 +17,6 @@ const SignalsCom = () => {
 	const [selected, onSelected] = useState<string>(getTickerFromUrl(location) ?? "");
 
 	const scrollView = () => {
-		console.log("?", stockDetailsRef, " | ", selected);
 		if (stockDetailsRef.current && selected) {
 			stockDetailsRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
 		}

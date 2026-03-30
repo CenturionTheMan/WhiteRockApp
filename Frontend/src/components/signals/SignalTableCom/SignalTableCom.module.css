@@ -78,14 +78,6 @@
 	cursor: pointer;
 }
 
-.TableAlSignal {
-	width: 50%;
-	min-width: fit-content;
-	padding: 10px;
-	text-align: center;
-	border-radius: var(--corner-radius);
-}
-
 .selectedRow {
 	background-color: rgba(var(--col-primary1-rgb), 0.1);
 }

@@ -9,7 +9,7 @@ function App() {
 		<Routes>
 			<Route element={<Layout />}>
 				<Route path="/" element={<DashboardCom />} />
-				<Route path="/list" element={<ViewListCom />} />
+				<Route path="/details" element={<ViewListCom />} />
 				<Route path="/help" element={<div />} />
 			</Route>
 		</Routes>

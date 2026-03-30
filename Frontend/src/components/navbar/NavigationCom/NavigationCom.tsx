@@ -35,8 +35,8 @@ const NavigationCom = () => {
 					<img src={activeNav === "/" ? dashActImg : dashImg} />
 					<span className={styles.underline} />
 				</div>
-				<div className={`${styles.navItem} ${activeNav === "/list" ? styles.navItemActive : ""}`} onClick={() => handleViewChange("/list")}>
-					<img src={activeNav === "/list" ? listActImg : listImg} />
+				<div className={`${styles.navItem} ${activeNav === "/details" ? styles.navItemActive : ""}`} onClick={() => handleViewChange("/details")}>
+					<img src={activeNav === "/details" ? listActImg : listImg} />
 					<span className={styles.underline} />
 				</div>
 

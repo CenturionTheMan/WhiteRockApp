@@ -1,4 +1,4 @@
-const navLinks = ["/", "/list", "/help"] as const;
+const navLinks = ["/", "/details", "/help"] as const;
 
 export type NavLink = (typeof navLinks)[number];
 
