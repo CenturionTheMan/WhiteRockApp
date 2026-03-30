@@ -19,7 +19,7 @@ const hexToRgba = (hex: string, alpha: number): string => {
 	return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 };
 
-export default function SimpleChart({ data, color = "#4facfe", height = 50, width = "100%", dot = { r: 2, fill: color }, type = "linear" }: Props) {
+export default function SimpleChart({ data, color = "#4facfe", height = 50, width = "100%", dot = { r: 2, fill: color }, type = "basis" }: Props) {
 	const maxValue = data.length > 0 ? Math.max(...data) : 1;
 	const minValue = data.length > 0 ? Math.min(...data) : 0;
 	const range = maxValue - minValue;

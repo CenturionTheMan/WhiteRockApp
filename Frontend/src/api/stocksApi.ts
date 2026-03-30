@@ -22,7 +22,7 @@ const from = (daysAgo: number) => {
 	d.setDate(d.getDate() - daysAgo);
 	return d.toISOString();
 };
-const stocksMock = () => [
+const STOCKS_MOCK: StockInfoModel[] = [
 	{ ticker: "AAPL", subtext: "Apple Inc.", fromDate: from(30), toDate: new Date().toISOString(), values: generatePrices(30, 178) },
 	{ ticker: "MSFT", subtext: "Microsoft Corporation", fromDate: from(30), toDate: new Date().toISOString(), values: generatePrices(30, 415) },
 	{ ticker: "GOOGL", subtext: "Alphabet Inc.", fromDate: from(30), toDate: new Date().toISOString(), values: generatePrices(30, 165) },
@@ -39,7 +39,7 @@ const stocksMock = () => [
 export const stocksApi = {
 	//TODO IMPLEMENT
 	getAll: async (): Promise<StockInfoModel[]> => {
-		return stocksMock(); //TODO REMOVE!
+		return STOCKS_MOCK; //TODO REMOVE!
 		const res = await fetch(`${BASE_URL}/stocks`);
 		if (!res.ok) throw new Error("Failed to fetch stocks");
 		return res.json();
@@ -47,7 +47,7 @@ export const stocksApi = {
 
 	//TODO IMPLEMENT
 	getByTicker: async (ticker: string): Promise<StockInfoModel> => {
-		const stock = stocksMock().find((s) => s.ticker == ticker); //TODO REMOVE!
+		const stock = STOCKS_MOCK.find((s) => s.ticker == ticker); //TODO REMOVE!
 		if (!stock) throw new Error(`Stock with ticker ${ticker} not found`);
 		return stock;
 
@@ -58,7 +58,7 @@ export const stocksApi = {
 
 	//TODO IMPLEMENT
 	getByPeriod: async (from: string, to: string): Promise<StockInfoModel[]> => {
-		return stocksMock().map((s) => ({
+		return STOCKS_MOCK.map((s) => ({
 			//TODO REMOVE!
 			...s,
 			values: s.values.filter((v) => v.date.toISOString() >= from && v.date.toISOString() <= to),
@@ -71,7 +71,7 @@ export const stocksApi = {
 
 	//TODO IMPLEMENT
 	getByTickerAndPeriod: async (ticker: string, fromIso: string, toIso: string): Promise<StockInfoModel> => {
-		const stock = stocksMock().find((s) => s.ticker === ticker); //TODO REMOVE!
+		const stock = STOCKS_MOCK.find((s) => s.ticker === ticker); //TODO REMOVE!
 		if (!stock) throw new Error(`Stock with ticker ${ticker} not found`);
 		return {
 			...stock,

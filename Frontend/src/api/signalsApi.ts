@@ -6,10 +6,10 @@ const BASE_URL = "http://localhost:3000/api"; //TODO SETUP
 const daysAgo = (days: number) => {
 	const d = new Date();
 	d.setDate(d.getDate() - days);
-	return d;
+	return d.toISOString();
 };
 
-const signalsMock = (): SignalModel[] => [
+const SIGNALS_MOCK: SignalModel[] = [
 	{ ticker: "AAPL", date: daysAgo(1), call: "BUY", confidence: 0.91 },
 	{ ticker: "AAPL", date: daysAgo(8), call: "HOLD", confidence: 0.74 },
 	{ ticker: "MSFT", date: daysAgo(2), call: "BUY", confidence: 0.88 },
@@ -36,7 +36,7 @@ const signalsMock = (): SignalModel[] => [
 export const signalsApi = {
 	//TODO IMPLEMENT
 	getLatest: async (): Promise<SignalModel[]> => {
-		return signalsMock().reduce((acc, signal) => {
+		return SIGNALS_MOCK.reduce((acc, signal) => {
 			const existing = acc.find((s) => s.ticker === signal.ticker);
 			if (!existing || signal.date > existing.date) {
 				return [...acc.filter((s) => s.ticker !== signal.ticker), signal];
@@ -51,7 +51,7 @@ export const signalsApi = {
 
 	//TODO IMPLEMENT
 	getByTicker: async (ticker: string): Promise<SignalModel[]> => {
-		return signalsMock().filter((s) => s.ticker == ticker); //TODO REMOVE
+		return SIGNALS_MOCK.filter((s) => s.ticker == ticker); //TODO REMOVE
 		const res = await fetch(`${BASE_URL}/signals/${ticker}`);
 		if (!res.ok) throw new Error("Failed to fetch signals");
 		return res.json();

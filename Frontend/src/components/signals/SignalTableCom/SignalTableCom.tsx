@@ -115,16 +115,16 @@ const getTickerFromUrl = (location: Location) => {
 	return ticker;
 };
 
-const SignalTableCom = ({ fnOnSelected, fnOnRowsLoaded }: { fnOnSelected: (ticker: string) => void; fnOnRowsLoaded: (rows: TableRowData[]) => void }) => {
+const SignalTableCom = ({ fnOnSelected }: { fnOnSelected: (ticker: string) => void }) => {
 	const navigate = useNavigate();
 	const location = useLocation();
 
 	const from = useMemo(() => {
 		const d = new Date();
 		d.setDate(d.getDate() - 30);
-		return d.toISOString();
+		return d;
 	}, []);
-	const to = useMemo(() => new Date().toISOString(), []);
+	const to = useMemo(() => new Date(), []);
 
 	const stocksFetch = useStockByPeriod(from, to);
 	const signalsFetch = useSignalsLatest();
@@ -144,10 +144,6 @@ const SignalTableCom = ({ fnOnSelected, fnOnRowsLoaded }: { fnOnSelected: (ticke
 			};
 		});
 	}, [stocksFetch.data, signalsFetch.data]);
-
-	useEffect(() => {
-		if (rows.length > 0) fnOnRowsLoaded(rows);
-	}, [rows]);
 
 	const handleRowSelected = (ticker: string) => {
 		navigate(`${location.pathname}?ticker=${ticker}`);

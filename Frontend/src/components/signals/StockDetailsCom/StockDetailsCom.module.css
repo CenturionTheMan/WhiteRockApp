@@ -3,7 +3,7 @@
 	margin-bottom: 20px;
 	padding: 20px;
 
-	height: 500px;
+	/* height: 500px; */
 
 	border-radius: var(--corner-radius);
 	background-color: var(--col-bg2);
@@ -27,11 +27,58 @@
 	text-align: right;
 }
 
+.periodPicker {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	margin: 12px 0;
+}
+
+.periodPicker input[type="date"] {
+	background: var(--col-bg3);
+	border: 1px solid #3a3f47;
+	border-radius: var(--corner-radius);
+	color: var(--col-tex1);
+	padding: 6px 10px;
+	font-size: 0.9rem;
+	font-family: "Manrope", sans-serif;
+	cursor: pointer;
+	transition: var(--transtion-default);
+	outline: none;
+	color-scheme: dark;
+}
+
+.periodPicker input[type="date"]:hover {
+	border-color: var(--col-primary1);
+	background: var(--col-bg3);
+}
+
+.periodPicker input[type="date"]:focus {
+	border-color: var(--col-primary1);
+	box-shadow: 0 0 0 2px rgba(117, 255, 158, 0.15);
+}
+
+.periodPicker input[type="date"]::-webkit-calendar-picker-indicator {
+	filter: invert(0.7) sepia(1) saturate(3) hue-rotate(90deg);
+	cursor: pointer;
+	opacity: 0.8;
+}
+.periodPicker input[type="date"]::-webkit-calendar-picker-indicator:hover {
+	opacity: 1;
+}
+
+.periodSeparator {
+	color: var(--col-info);
+	font-size: 0.85rem;
+	padding: 0 2px;
+}
+
 .chartHolder {
 	margin-top: 20px;
 	margin-left: auto;
 	margin-right: auto;
 	width: 100%;
+	min-height: 100px;
 	height: 50vh;
 	outline: none;
 }

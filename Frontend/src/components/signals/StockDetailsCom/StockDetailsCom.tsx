@@ -6,8 +6,9 @@ import { LineChart, Line, ResponsiveContainer, YAxis, XAxis, CartesianGrid, Tool
 import type { CurveType } from "recharts/types/shape/Curve";
 import type { DotType } from "recharts/types/util/types";
 import { sign } from "chart.js/helpers";
-import { useStockByTicker } from "../../../hooks/useStocks";
+import { useStockByTicker, useStockByTickerAndPeriod } from "../../../hooks/useStocks";
 import { useSignalsByTicker, useSignalsLatest } from "../../../hooks/useSignals";
+import { toDate } from "../../../utils/dateUtils";
 
 export type StockDetailsData = {
 	ticker: string;
@@ -39,7 +40,9 @@ const GetCallColor = (signal: string) => {
 const createChart = (data: StockDetailsData) => {
 	const buildChartData = (data: StockDetailsData) => {
 		return data.prices.map((p) => {
-			const call = data.calls.find((c) => c.date.getTime() === p.date.getTime());
+			const call = data.calls.find(
+				(c) => new Date(c.date).toDateString() === new Date(p.date).toDateString(), //TODO eventually to change co comapre by exact hour probably
+			);
 
 			return {
 				...p,
@@ -49,6 +52,7 @@ const createChart = (data: StockDetailsData) => {
 	};
 
 	const getTrendColor = (prices: { price: number }[]) => {
+		if (prices.length < 2) return GetStyleColor(0);
 		const first = prices[0].price;
 		const last = prices[prices.length - 1].price;
 		return GetStyleColor(last - first);
@@ -93,6 +97,11 @@ const createChart = (data: StockDetailsData) => {
 				<XAxis dataKey="date" tickFormatter={(d) => new Date(d).toLocaleDateString()} />
 
 				<YAxis
+					tickFormatter={(value) => `$${value}`}
+					domain={([dataMin, dataMax]) => [
+						Math.floor(dataMin * 0.995), // 0.5% padding below
+						Math.ceil(dataMax * 1.005), // 0.5% padding above
+					]}
 					label={{
 						value: "Price",
 						angle: -90,
@@ -109,11 +118,14 @@ const createChart = (data: StockDetailsData) => {
 };
 
 const StockDetailsCom = ({ ticker }: { ticker: string }) => {
-	const now = new Date();
-	const pastDate = new Date(now);
-	pastDate.setDate(pastDate.getDate() - 30);
+	const [from, setFrom] = useState(() => {
+		const d = new Date();
+		d.setDate(d.getDate() - 30);
+		return d.toISOString().split("T")[0];
+	});
+	const [to, setTo] = useState(() => new Date().toISOString().split("T")[0]);
 
-	const stockFetch = useStockByTicker(ticker);
+	const stockFetch = useStockByTickerAndPeriod(ticker, new Date(from), new Date(to));
 	const signalsFetch = useSignalsByTicker(ticker);
 
 	const data = useMemo<StockDetailsData | null>(() => {
@@ -123,7 +135,7 @@ const StockDetailsCom = ({ ticker }: { ticker: string }) => {
 			ticker: stockFetch.data.ticker,
 			description: stockFetch.data.subtext,
 			prices: stockFetch.data.values,
-			calls: signalsFetch.data.map((sig) => ({ date: sig.date, signal: sig.call })),
+			calls: signalsFetch.data.map((sig) => ({ date: toDate(sig.date), signal: sig.call })),
 		};
 		return details;
 	}, [ticker, stockFetch.data, signalsFetch.data]);
@@ -144,7 +156,11 @@ const StockDetailsCom = ({ ticker }: { ticker: string }) => {
 							<span>Last updated: 14:00</span>
 						</div>
 					</div>
-
+					<div className={styles.periodPicker}>
+						<input type="date" value={from} max={to} onChange={(e) => setFrom(e.target.value)} />
+						<span className={styles.periodSeparator}>→</span>
+						<input type="date" value={to} min={from} max={new Date().toISOString().split("T")[0]} onChange={(e) => setTo(e.target.value)} />
+					</div>
 					<div className={styles.chartHolder}>{createChart(data)}</div>
 				</div>
 			);

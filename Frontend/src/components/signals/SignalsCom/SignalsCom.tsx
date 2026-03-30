@@ -1,8 +1,8 @@
 import styles from "./SignalsCom.module.css";
 
-import SignalTable from "../SignalTableCom/SignalTableCom";
-import StockDetails from "../StockDetailsCom/StockDetails";
-import { useEffect, useRef, useState } from "react";
+import SignalTable, { type TableRowData } from "../SignalTableCom/SignalTableCom";
+import StockDetails from "../StockDetailsCom/StockDetailsCom";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useLocation, type Location } from "react-router-dom";
 
 const getTickerFromUrl = (location: Location) => {
@@ -16,32 +16,25 @@ const SignalsCom = () => {
 	const stockDetailsRef = useRef<HTMLDivElement>(null);
 	const [selected, onSelected] = useState<string>(getTickerFromUrl(location) ?? "");
 
-	const scrollView = () => {
-		if (stockDetailsRef.current && selected) {
-			stockDetailsRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
-		}
-	};
-
-	const handleOnSelected = (ticker: string) => {
+	const handleOnSelected = useCallback((ticker: string) => {
 		onSelected(ticker);
-		if (ticker === selected) {
-			setTimeout(() => {
-				scrollView();
-			}, 0);
-		}
-	};
+	}, []);
 
 	useEffect(() => {
-		if (selected) {
-			scrollView();
-		}
+		if (!selected) return;
+
+		const timeout = setTimeout(() => {
+			stockDetailsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+		}, 50); // small delay for DOM to update
+
+		return () => clearTimeout(timeout);
 	}, [selected]);
 
 	return (
 		<div className={styles.container}>
 			<span className="text-size2 text-style2">WhiteRock Next Gen AI</span>
 			<span className="text-size4 text-style4">Real-time AI analysis of global assets. Signals are updated every hour.</span>
-			<SignalTable fnOnSelected={handleOnSelected} fnOnRowsLoaded={() => scrollView()} />
+			<SignalTable fnOnSelected={handleOnSelected} />
 			<div ref={stockDetailsRef} className={`${styles.stockDetailsHolder} ${selected ? styles.show : ""}`}>
 				<StockDetails ticker={selected} />
 			</div>

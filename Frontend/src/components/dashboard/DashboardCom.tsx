@@ -7,9 +7,9 @@ const DashboardCom = () => {
 	const from = useMemo(() => {
 		const d = new Date();
 		d.setDate(d.getDate() - 30);
-		return d.toISOString();
+		return d;
 	}, []);
-	const to = useMemo(() => new Date().toISOString(), []);
+	const to = useMemo(() => new Date(), []);
 	const stocksFetch = useStockByPeriod(from, to);
 
 	const renderStocks = () => {
