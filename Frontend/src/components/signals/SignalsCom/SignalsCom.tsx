@@ -21,6 +21,14 @@ const SignalsCom = () => {
 	}, []);
 
 	useEffect(() => {
+		const tickerFromUrl = getTickerFromUrl(location);
+
+		if (tickerFromUrl && tickerFromUrl !== selected) {
+			onSelected(tickerFromUrl);
+		}
+	}, [location.search]);
+
+	useEffect(() => {
 		if (!selected) return;
 
 		const timeout = setTimeout(() => {
