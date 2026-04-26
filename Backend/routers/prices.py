@@ -90,6 +90,9 @@ def __create_stock_prices_query(db: db_dependency, ticker: str,
         query = query.filter(db_rows.PriceRow.timestamp <= to_timestamp)
 
     query = query.options(joinedload(db_rows.PriceRow.stock))
+    
+    query = query.order_by(db_rows.PriceRow.timestamp.asc())
+    
     return stock, query
 
     
