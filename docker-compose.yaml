@@ -5,6 +5,8 @@ services:
       POSTGRES_USER: postgres-user
       POSTGRES_PASSWORD: pass
       POSTGRES_DB: whiterockdb
+    ports:
+      - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
@@ -20,6 +22,16 @@ services:
       - "8000:8000"
     volumes:
       - ./Backend:/app
+      - ./shared:/app/shared
+    depends_on:
+      db:
+        condition: service_healthy
+
+  scheduler:
+    build: ./Scheduler
+    volumes:
+      - ./Scheduler:/app
+      - ./shared:/app/shared
     depends_on:
       db:
         condition: service_healthy
