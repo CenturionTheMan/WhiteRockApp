@@ -1,53 +1,68 @@
 import styles from "./SignalsCom.module.css";
 
-import SignalTable, { type TableRowData } from "../SignalTableCom/SignalTableCom";
+import SignalTable from "../SignalTableCom/SignalTableCom";
 import StockDetails from "../StockDetailsCom/StockDetailsCom";
-import { useCallback, useEffect, useRef, useState } from "react";
-import { useLocation, type Location } from "react-router-dom";
+import { useCallback, useEffect, useRef } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 
-const getTickerFromUrl = (location: Location) => {
-	const queryParams = new URLSearchParams(location.search);
-	const ticker = queryParams.get("ticker") ?? "";
-	return ticker;
+const getTickerFromUrl = (search: string) => {
+  const queryParams = new URLSearchParams(search);
+  return queryParams.get("ticker") ?? "";
 };
 
 const SignalsCom = () => {
-	const location = useLocation();
-	const stockDetailsRef = useRef<HTMLDivElement>(null);
-	const [selected, onSelected] = useState<string>(getTickerFromUrl(location) ?? "");
+  const location = useLocation();
+  const navigate = useNavigate();
 
-	const handleOnSelected = useCallback((ticker: string) => {
-		onSelected(ticker);
-	}, []);
+  const stockDetailsRef = useRef<HTMLDivElement>(null);
 
-	useEffect(() => {
-		const tickerFromUrl = getTickerFromUrl(location);
+  const selected = getTickerFromUrl(location.search);
 
-		if (tickerFromUrl && tickerFromUrl !== selected) {
-			onSelected(tickerFromUrl);
-		}
-	}, [location.search]);
+  const handleOnSelected = useCallback((_ticker: string) => {}, []);
 
-	useEffect(() => {
-		if (!selected) return;
+  const prevSelected = useRef<string>("");
 
-		const timeout = setTimeout(() => {
-			stockDetailsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-		}, 50); // small delay for DOM to update
+  useEffect(() => {
+    if (!selected) return;
 
-		return () => clearTimeout(timeout);
-	}, [selected]);
+    // Don't scroll if this is just a data refresh for the same ticker
+    if (prevSelected.current === selected) return;
+    prevSelected.current = selected;
 
-	return (
-		<div className={styles.container}>
-			<span className="text-size2 text-style2">WhiteRock Next Gen AI</span>
-			<span className="text-size4 text-style4">Real-time AI analysis of global assets. Signals are updated every hour.</span>
-			<SignalTable fnOnSelected={handleOnSelected} />
-			<div ref={stockDetailsRef} className={`${styles.stockDetailsHolder} ${selected ? styles.show : ""}`}>
-				<StockDetails ticker={selected} />
-			</div>
-		</div>
-	);
+    // Scroll only after the element has real height (data loaded + painted)
+    const tryScroll = (attemptsLeft: number) => {
+      const el = stockDetailsRef.current;
+      // Wait until element has meaningful height (not just .show with empty content)
+      if (el && el.offsetHeight > 100) {
+        el.scrollIntoView({ behavior: "smooth", block: "start" });
+      } else if (attemptsLeft > 0) {
+        setTimeout(() => tryScroll(attemptsLeft - 1), 80);
+      }
+    };
+
+    tryScroll(15);
+  }, [selected]);
+
+  return (
+    <div className={styles.container}>
+      <span className="text-size2 text-style2">WhiteRock Next Gen AI</span>
+
+      <span className="text-size4 text-style4">
+        Real-time AI analysis of global assets. Signals are updated every hour.
+      </span>
+
+      <SignalTable fnOnSelected={handleOnSelected} />
+
+      <div
+        ref={stockDetailsRef}
+        className={`${styles.stockDetailsHolder} ${
+          selected ? styles.show : ""
+        }`}
+      >
+        <StockDetails ticker={selected} />
+      </div>
+    </div>
+  );
 };
 
 export default SignalsCom;

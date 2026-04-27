@@ -183,6 +183,8 @@ const StockDetailsCom = ({ ticker }: { ticker: string }) => {
     };
   }, [ticker, stockFetch.data, signalsFetch.data]);
 
+  const isLoading = stockFetch.loading || signalsFetch.loading;
+
   const renderContent = () => {
     return (
       <>
@@ -223,7 +225,10 @@ const StockDetailsCom = ({ ticker }: { ticker: string }) => {
   };
 
   return (
-    <div id="tickerDetails" className={styles.detailsDiv}>
+    <div
+      id="tickerDetails"
+      className={`${styles.detailsDiv} ${isLoading ? styles.loading : ""}`}
+    >
       {ticker === "" || !data || data.ticker === undefined ? (
         <div />
       ) : (
