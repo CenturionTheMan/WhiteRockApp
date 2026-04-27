@@ -5,8 +5,8 @@ services:
       POSTGRES_USER: postgres-user
       POSTGRES_PASSWORD: pass
       POSTGRES_DB: whiterockdb
-    ports:
-      - "5432:5432"
+    # ports:
+    #   - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
@@ -40,6 +40,14 @@ services:
     build: ./Frontend
     ports:
       - "5713:5713"
+    volumes:
+      - ./Frontend:/src/app
+      - /src/app/node_modules
+    depends_on:
+      - backend
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+      - WATCHPACK_POLLING=true
 
 volumes:
   postgres_data:
