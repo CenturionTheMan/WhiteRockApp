@@ -4,20 +4,20 @@ const BASE_URL = "http://localhost:8000";
 
 export const stocksApi = {
   getAll: async (): Promise<StockInfoModel[]> => {
-    const res = await fetch(`${BASE_URL}/prices/formatted`);
+    const res = await fetch(`${BASE_URL}/prices/`);
     if (!res.ok) throw new Error("Failed to fetch stocks");
     return res.json();
   },
 
   getByTicker: async (ticker: string): Promise<StockInfoModel> => {
-    const res = await fetch(`${BASE_URL}/prices/formatted/${ticker}`);
+    const res = await fetch(`${BASE_URL}/prices/${ticker}`);
     if (!res.ok) throw new Error("Failed to fetch stocks");
     return res.json();
   },
 
   getByPeriod: async (from: string, to: string): Promise<StockInfoModel[]> => {
     const res = await fetch(
-      `${BASE_URL}/prices/formatted?from_timestamp=${from}&to_timestamp=${to}`,
+      `${BASE_URL}/prices/?from_timestamp=${from}&to_timestamp=${to}`,
     );
     if (!res.ok) throw new Error("Failed to fetch stocks");
     return res.json();
@@ -29,7 +29,7 @@ export const stocksApi = {
     toIso: string,
   ): Promise<StockInfoModel> => {
     const res = await fetch(
-      `${BASE_URL}/prices/formatted/${ticker}?from_timestamp=${fromIso}&to_timestamp=${toIso}`,
+      `${BASE_URL}/prices/${ticker}?from_timestamp=${fromIso}&to_timestamp=${toIso}`,
     );
     if (!res.ok) throw new Error("Failed to fetch stocks");
     return res.json();

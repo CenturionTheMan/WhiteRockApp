@@ -8,24 +8,6 @@ from pydantic import BaseModel
 
 
 # ============================ MODELS ============================
-class PriceModelPost(BaseModel):
-    ticker: str
-    timestamp: datetime.datetime
-    price: float
-
-
-class PriceModelGet(BaseModel):
-    ticker: str
-    timestamp: datetime.datetime
-    price: float
-   
-def RowToGetModel(row: db_rows.PriceRow) -> PriceModelGet:
-    return PriceModelGet(
-        ticker=row.stock.ticker,
-        timestamp=row.timestamp,
-        price=row.price
-    ) 
-    
 class PriceValue(BaseModel):
     price: float
     date: datetime.datetime
@@ -54,46 +36,28 @@ db_dependency = Annotated[Session, Depends(get_db)]
 
 
 # ============================ ROUTES ============================
-@router.post("/", response_model=PriceModelGet)
-async def create_price(price: PriceModelPost, db: db_dependency):
-    stock = db.query(db_rows.StockRow).filter(db_rows.StockRow.ticker == price.ticker).first()
-    if stock is None:
-        raise HTTPException(status_code=404, detail="Stock with given ticker not found")
-    
-    db_price = db_rows.PriceRow(
-       stock_id = stock.id,
-       timestamp = price.timestamp,
-       price = price.price)
-    
-    db.add(db_price)
-    db.commit()
-    db.refresh(db_price)
-    
-    return RowToGetModel(db_price)
-
-
-def __create_stock_prices_query(db: db_dependency, ticker: str,
+def __handle_stock_prices_query(db: db_dependency, ticker: str,
                                 from_timestamp: Optional[datetime.datetime] = None,
                                 to_timestamp: Optional[datetime.datetime] = None) -> tuple[db_rows.StockRow, Session.query]:
     stock = db.query(db_rows.StockRow).filter(db_rows.StockRow.ticker == ticker).first()
     if stock is None:
         raise HTTPException(status_code=404, detail="Stock not found")
 
-    query = db.query(db_rows.PriceRow).filter(db_rows.PriceRow.stock_id == stock.id)
+    query = db.query(db_rows.CandleRow).filter(db_rows.CandleRow.stock_id == stock.id)
 
     if from_timestamp:
-        query = query.filter(db_rows.PriceRow.timestamp >= from_timestamp)
+        query = query.filter(db_rows.CandleRow.timestamp >= from_timestamp)
 
     if to_timestamp:
-        query = query.filter(db_rows.PriceRow.timestamp <= to_timestamp)
+        query = query.filter(db_rows.CandleRow.timestamp <= to_timestamp)
 
-    query = query.options(joinedload(db_rows.PriceRow.stock))
-    query = query.order_by(db_rows.PriceRow.timestamp.asc())
+    query = query.options(joinedload(db_rows.CandleRow.stock))
+    query = query.order_by(db_rows.CandleRow.timestamp.asc())
     
     return stock, query
 
     
-@router.get("/formatted", response_model=List[PriceModelFormattedGet])
+@router.get("/", response_model=List[PriceModelFormattedGet])
 def get_stock_prices_formatted(
     db: db_dependency,
     from_timestamp: Optional[datetime.datetime] = None,
@@ -103,10 +67,10 @@ def get_stock_prices_formatted(
 
     result = []
     for st in all_stocks:
-        stock, query = __create_stock_prices_query(db, st.ticker, from_timestamp, to_timestamp)
+        stock, query = __handle_stock_prices_query(db, st.ticker, from_timestamp, to_timestamp)
 
         values = [
-            PriceValue(price=row.price, date=row.timestamp)
+            PriceValue(price=row.close, date=row.timestamp)
             for row in query.all()
         ]
 
@@ -120,26 +84,16 @@ def get_stock_prices_formatted(
 
     return result
 
-@router.get("/formatted/{ticker}", response_model=PriceModelFormattedGet)
+@router.get("/{ticker}", response_model=PriceModelFormattedGet)
 def get_stock_prices_formatted_ticker(db: db_dependency, ticker: str,
                                       from_timestamp: Optional[datetime.datetime] = None,
                                       to_timestamp: Optional[datetime.datetime] = None):
     
-    stock, query = __create_stock_prices_query(db, ticker, from_timestamp, to_timestamp)
-    values = [PriceValue(price=row.price, date=row.timestamp) for row in query.all()]
+    stock, query = __handle_stock_prices_query(db, ticker, from_timestamp, to_timestamp)
+    values = [PriceValue(price=row.close, date=row.timestamp) for row in query.all()]
     return PriceModelFormattedGet(
         ticker=stock.ticker,
         subtext=stock.name,
         fromDate=from_timestamp,
         toDate=to_timestamp,
         values=values)
-
-
-        
-@router.get("/{ticker}", response_model=List[PriceModelGet])
-def get_stock_prices_raw(db: db_dependency, ticker: str,
-                     from_timestamp: Optional[datetime.datetime] = None,
-                     to_timestamp: Optional[datetime.datetime] = None):
-    
-    stock, query = __create_stock_prices_query(db, ticker, from_timestamp, to_timestamp)
-    return [RowToGetModel(row) for row in query.all()]
