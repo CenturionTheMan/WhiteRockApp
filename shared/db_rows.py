@@ -1,4 +1,4 @@
-from sqlalchemy import BigInteger, Boolean, Column, ForeignKey, Integer, Numeric, String, DateTime # type: ignore
+from sqlalchemy import BigInteger, Boolean, Column, Enum, ForeignKey, Index, Integer, Numeric, String, DateTime, UniqueConstraint # type: ignore
 from sqlalchemy.orm import relationship
 from shared.database import Base
 
@@ -17,7 +17,7 @@ class CandleRow(Base):
     
     id = Column(Integer, primary_key=True)
     stock_id = Column(Integer, ForeignKey("stocks.id"))
-    timestamp = Column(DateTime, index=True)
+    timestamp = Column(DateTime)
     open_ = Column("open", Numeric(12, 4))
     high = Column(Numeric(12, 4))
     low = Column(Numeric(12, 4))
@@ -26,12 +26,33 @@ class CandleRow(Base):
 
     stock = relationship("StockRow", back_populates="candles")
     
+    __table_args__ = (
+        Index("ix_candle_stock_timestamp", "stock_id", "timestamp"),
+        UniqueConstraint("stock_id", "timestamp")
+    )
+    
+    
 class SignalRow(Base):
     __tablename__ = 'signals'
     
     id = Column(Integer, primary_key=True)
     stock_id = Column(Integer, ForeignKey("stocks.id"))
     timestamp = Column(DateTime)
-    action = Column(String)
+    action = Column(Enum("BUY", "SELL", "HOLD", name="signal_action"), nullable=False)
+    confidence = Column(Numeric(5, 2))
 
     stock = relationship("StockRow", back_populates="signals")
+    
+    __table_args__ = (
+        Index("ix_signals_stock_timestamp", "stock_id", "timestamp"),
+        UniqueConstraint("stock_id", "timestamp")
+    )
+    
+class SchedulerLogRow(Base):
+    __tablename__ = 'scheduler_logs'
+    
+    id = Column(Integer, primary_key=True)
+    taction = Column(String, nullable=False)
+    timestamp = Column(DateTime, nullable=False)
+    is_success = Column(Boolean, nullable=False)
+   
