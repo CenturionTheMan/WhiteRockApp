@@ -45,7 +45,7 @@ def __insert_sample_data(db: Session):
             signal = db_rows.SignalRow(
                 stock_id=stock.id,
                 timestamp=start_date + timedelta(days=i),
-                action=action,
+                call=action,
                 confidence=confidence
             )
             signals.append(signal)

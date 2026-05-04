@@ -38,7 +38,7 @@ class SignalRow(Base):
     id = Column(Integer, primary_key=True)
     stock_id = Column(Integer, ForeignKey("stocks.id"))
     timestamp = Column(DateTime)
-    action = Column(Enum("BUY", "SELL", "HOLD", name="signal_action"), nullable=False)
+    call = Column(Enum("BUY", "SELL", "HOLD", name="signal_call"), nullable=False)
     confidence = Column(Numeric(5, 2))
 
     stock = relationship("StockRow", back_populates="signals")

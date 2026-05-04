@@ -177,7 +177,7 @@ const StockDetailsCom = ({ ticker }: { ticker: string }) => {
       description: stockFetch.data.subtext,
       prices: stockFetch.data.values,
       calls: signalsFetch.data.map((sig) => ({
-        date: toDate(sig.date),
+        date: toDate(sig.timestamp),
         signal: sig.call,
       })),
     };
