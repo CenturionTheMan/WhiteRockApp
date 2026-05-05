@@ -34,4 +34,10 @@ export const stocksApi = {
     if (!res.ok) throw new Error("Failed to fetch stocks");
     return res.json();
   },
+
+  getLatestClosePrice: async (ticker: string): Promise<number> => {
+    const res = await fetch(`${BASE_URL}/candles/latest/${ticker}`);
+    if (!res.ok) throw new Error("Failed to fetch latest close price");
+    return res.json();
+  },
 };

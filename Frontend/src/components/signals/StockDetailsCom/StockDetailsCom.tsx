@@ -11,17 +11,8 @@ import {
   CartesianGrid,
   Tooltip,
 } from "recharts";
-import type { CurveType } from "recharts/types/shape/Curve";
-import type { DotType } from "recharts/types/util/types";
-import { sign } from "chart.js/helpers";
-import {
-  useStockByTicker,
-  useStockByTickerAndPeriod,
-} from "../../../hooks/useStocks";
-import {
-  useSignalsByTicker,
-  useSignalsLatest,
-} from "../../../hooks/useSignals";
+import { useStockByTickerAndPeriod } from "../../../hooks/useStocks";
+import { useSignalsByTicker } from "../../../hooks/useSignals";
 import { toDate } from "../../../utils/dateUtils";
 
 export type StockDetailsData = {
@@ -53,15 +44,32 @@ const GetCallColor = (signal: string) => {
 
 const createChart = (data: StockDetailsData) => {
   const buildChartData = (data: StockDetailsData) => {
+    let lastSignal: string | null = null;
+    let isFirst = true;
+
     return data.prices.map((p) => {
       const call = data.calls.find(
-        (c) =>
-          new Date(c.date).toDateString() === new Date(p.date).toDateString(), //TODO eventually to change co comapre by exact hour probably
+        (c) => new Date(c.date).getTime() === new Date(p.date).getTime(),
       );
+
+      const currentSignal = call?.signal ?? null;
+
+      let signalToShow: string | null = null;
+
+      if (currentSignal !== null) {
+        if (isFirst) {
+          signalToShow = currentSignal;
+          lastSignal = currentSignal;
+          isFirst = false;
+        } else if (currentSignal !== lastSignal) {
+          signalToShow = currentSignal;
+          lastSignal = currentSignal;
+        }
+      }
 
       return {
         ...p,
-        signal: call?.signal ?? null,
+        signal: signalToShow,
       };
     });
   };
@@ -182,7 +190,6 @@ const StockDetailsCom = ({ ticker }: { ticker: string }) => {
       })),
     };
   }, [ticker, stockFetch.data, signalsFetch.data]);
-
   const isLoading = stockFetch.loading || signalsFetch.loading;
 
   const renderContent = () => {

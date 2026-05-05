@@ -47,28 +47,22 @@ db_dependency = Annotated[Session, Depends(get_db)]
 
 
 # ============================ ROUTES ============================
-@router.post("/", response_model=CandleModel)
-async def create_candle(price: CandleModel, db: db_dependency):
-    stock = db.query(db_rows.StockRow).filter(db_rows.StockRow.ticker == price.ticker).first()
+@router.get("/latest/{ticker}", response_model=CandleModel)
+def get_latest_candle_by_ticker(db: db_dependency, ticker: str):
+    stock = db.query(db_rows.StockRow).filter(db_rows.StockRow.ticker == ticker).first()
     if stock is None:
-        raise HTTPException(status_code=404, detail="Stock with given ticker not found")
+        raise HTTPException(status_code=404, detail="Stock not found")
     
-    db_candle = db_rows.CandleRow1(
-        stock_id = stock.id,
-        timestamp = price.timestamp,
-        close = price.close,
-        open_ = price.open_,
-        high = price.high,
-        low = price.low,
-        volume = price.volume)
-    
-    db.add(db_candle)
-    db.commit()
-    db.refresh(db_candle)
-    
-    return RowToModel(db_candle)
+    query = db.query(db_rows.CandleRow).filter(db_rows.CandleRow.stock_id == stock.id).order_by(db_rows.CandleRow.timestamp.desc())
+    query = query.options(joinedload(db_rows.CandleRow.stock))
+    latest_candle = query.first()
+    if latest_candle is None:
+        raise HTTPException(status_code=404, detail="No candles found for this stock")
+    else:
+        return RowToModel(latest_candle)    
+         
 
-        
+
 @router.get("/{ticker}", response_model=List[CandleModel])
 def get_candles_by_ticker(db: db_dependency, ticker: str,
                      from_timestamp: Optional[datetime.datetime] = None,
@@ -91,3 +85,26 @@ def get_candles_by_ticker(db: db_dependency, ticker: str,
     query = query.order_by(db_rows.CandleRow.timestamp.asc())
     
     return [RowToModel(row) for row in query.all()]
+
+@router.post("/", response_model=CandleModel)
+async def create_candle(price: CandleModel, db: db_dependency):
+    stock = db.query(db_rows.StockRow).filter(db_rows.StockRow.ticker == price.ticker).first()
+    if stock is None:
+        raise HTTPException(status_code=404, detail="Stock with given ticker not found")
+    
+    db_candle = db_rows.CandleRow1(
+        stock_id = stock.id,
+        timestamp = price.timestamp,
+        close = price.close,
+        open_ = price.open_,
+        high = price.high,
+        low = price.low,
+        volume = price.volume)
+    
+    db.add(db_candle)
+    db.commit()
+    db.refresh(db_candle)
+    
+    return RowToModel(db_candle)
+
+        

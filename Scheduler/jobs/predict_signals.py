@@ -25,32 +25,34 @@ def __insert_sample_data(db: Session):
     
     stocks = db.query(db_rows.StockRow).all()
     days = 30
-    start_date = datetime.now(timezone.utc)    
+    now = datetime.now(timezone.utc)
+    start_date = datetime(now.year, now.month, now.day, tzinfo=timezone.utc) 
     ACTIONS = ["BUY", "SELL", "HOLD"]
     
     for stock in stocks:
         signals = []
         for i in range(days):
+            target_date = start_date + timedelta(days=-i)
+            
             exist = db.query(db_rows.SignalRow).filter(
                 db_rows.SignalRow.stock_id == stock.id,
-                db_rows.SignalRow.timestamp >= start_date + timedelta(days=i),
-                db_rows.SignalRow.timestamp < start_date + timedelta(days=i+1)
+                db_rows.SignalRow.timestamp == target_date
             ).first()
             if exist:
                 continue
             
             action = random.choices(ACTIONS,weights=[0.3, 0.3, 0.4])[0]
-            confidence = Decimal(str(round(random.uniform(50, 95), 2)))
+            confidence = Decimal(str(round(random.uniform(0, 1), 4)))
             
             signal = db_rows.SignalRow(
                 stock_id=stock.id,
-                timestamp=start_date + timedelta(days=i),
+                timestamp=target_date,
                 call=action,
                 confidence=confidence
             )
             signals.append(signal)
             
-            print(f"    Generated signal for {stock.ticker} - {action} with confidence {confidence}%")
+            print(f"    Generated signal for {stock.ticker} - {action} with confidence {confidence*100}%")
             
         db.add_all(signals)
     db.commit()
