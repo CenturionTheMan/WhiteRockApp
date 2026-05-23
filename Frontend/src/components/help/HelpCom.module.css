@@ -20,6 +20,5 @@ li {
 }
 
 .important {
-  /* color: var(--col-negative1); */
-  color: red;
+  color: var(--col-negative1);
 }
