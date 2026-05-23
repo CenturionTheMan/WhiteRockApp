@@ -49,13 +49,25 @@ const OverviewCom = () => {
     };
   }, [latestSignals.data]);
 
+  const getMomentumComment = (momentumSocore: number) => {
+    if (momentumSocore >= 0.75) {
+      return "AI signals indicate a strong momentum across indices.";
+    } else if (momentumSocore >= 0.5) {
+      return "AI signals indicate a moderate positive momentum across indices.";
+    } else if (momentumSocore >= 0.25) {
+      return "AI signals indicate mixed or weak momentum across indices.";
+    } else {
+      return "AI signals indicate a predominantly bearish or uncertain market momentum.";
+    }
+  };
+
   return (
     <div className={`${styles.holder}`}>
       <div className={styles.card1}>
         <div className={`text-style3 text-size3 ${styles.title}`}>GLOBAL MARKET SENTIMENT</div>
         <div className={`${styles.header} text-style1 text-size1`}>Highly Bullish</div>
         <span className={`${styles.comment} text-style4 text-size3`}>
-          AI signals indicate a strong momentum across tech indices. <br />
+          {getMomentumComment((buyAmt + sellAmt) / (buyAmt + sellAmt + holdAmt))} <br />
           Momentum score: {buyAmt + sellAmt}/{buyAmt + sellAmt + holdAmt}
         </span>
       </div>

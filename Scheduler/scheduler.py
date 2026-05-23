@@ -1,10 +1,12 @@
 from jobs.fetch_market_data import fetch_market_data
 from jobs.predict_signals import predict_signals
+from jobs.init_stocks import init_stocks
 from apscheduler.schedulers.blocking import BlockingScheduler # type: ignore
 
 def run():
     print("[] Scheduler is alive")
     
+    init_stocks()
     fetch_market_data()
     predict_signals()
     
