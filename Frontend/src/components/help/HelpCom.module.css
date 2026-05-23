@@ -1,0 +1,25 @@
+main {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+h2 {
+  font-family: "Manrope", sans-serif;
+  font-weight: var(--font-weight-regular);
+  color: var(--col-tex1);
+  font-size: var(--font-size-large);
+}
+
+p,
+li {
+  font-size: var(--font-size-small);
+  font-family: "Manrope", sans-serif;
+  font-weight: var(--font-weight-regular);
+  color: var(--col-tex1);
+}
+
+.important {
+  /* color: var(--col-negative1); */
+  color: red;
+}
