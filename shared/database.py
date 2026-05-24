@@ -1,5 +1,5 @@
 import os
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, event, DDL
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 
@@ -10,3 +10,9 @@ engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 Base = declarative_base()
+
+event.listen(
+    Base.metadata,
+    "before_create",
+    DDL("CREATE TYPE IF NOT EXISTS signal_call AS ENUM ('BUY', 'SELL', 'HOLD')")
+)

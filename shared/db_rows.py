@@ -1,6 +1,9 @@
 from sqlalchemy import BigInteger, Boolean, Column, Enum, ForeignKey, Index, Integer, Numeric, String, DateTime, UniqueConstraint # type: ignore
 from sqlalchemy.orm import relationship
 from shared.database import Base
+import sqlalchemy as sa
+
+signal_call_enum = sa.Enum('BUY', 'SELL', 'HOLD', name='signal_call', create_type=False)
 
 class StockRow(Base):
     __tablename__= 'stocks'
@@ -38,7 +41,7 @@ class SignalRow(Base):
     id = Column(Integer, primary_key=True)
     stock_id = Column(Integer, ForeignKey("stocks.id"))
     timestamp = Column(DateTime)
-    call = Column(Enum("BUY", "SELL", "HOLD", name="signal_call"), nullable=False)
+    call = Column(signal_call_enum, nullable=False)
     confidence = Column(Numeric(5, 2))
 
     stock = relationship("StockRow", back_populates="signals")
