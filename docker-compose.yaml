@@ -1,53 +1,54 @@
+networks:
+  app-net:
+    driver: bridge
+
 services:
   db:
     image: postgres:16
+    networks:
+      - app-net
     environment:
-      POSTGRES_USER: postgres-user
-      POSTGRES_PASSWORD: pass
-      POSTGRES_DB: whiterockdb
-    # ports:
-    #   - "5432:5432"
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres-user -d whiterockdb"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
       interval: 5s
       timeout: 5s
       retries: 5
 
   backend:
-    build: ./Backend
-    command: uvicorn main:app --reload --port 8000 --host 0.0.0.0
-    ports:
-      - "8000:8000"
-    volumes:
-      - ./Backend:/app
-      - ./shared:/app/shared
+    build:
+      context: ./Backend
+      dockerfile: Dockerfile
+    networks:
+      - app-net
     depends_on:
       db:
         condition: service_healthy
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
 
   scheduler:
     build: ./Scheduler
-    volumes:
-      - ./Scheduler:/app
-      - ./shared:/app/shared
+    networks:
+      - app-net
     depends_on:
       db:
         condition: service_healthy
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
 
   frontend:
-    build: ./Frontend
-    ports:
-      - "5713:5713"
-    volumes:
-      - ./Frontend:/src/app
-      - /src/app/node_modules
+    build:
+      context: ./Frontend
+      dockerfile: Dockerfile
+    networks:
+      - app-net
     depends_on:
       - backend
-    environment:
-      - CHOKIDAR_USEPOLLING=true
-      - WATCHPACK_POLLING=true
 
 volumes:
   postgres_data:

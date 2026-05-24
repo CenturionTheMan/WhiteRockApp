@@ -1,0 +1,32 @@
+services:
+  db:
+    ports:
+      - "5433:5432" # expose DB locally for tools like DBeaver -> 5432 taken by local postgress
+
+  backend:
+    build:
+      target: dev
+    command: uvicorn main:app --reload --port 8000 --host 0.0.0.0
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./Backend:/app
+      - ./shared:/app/shared
+
+  scheduler:
+    volumes:
+      - ./Scheduler:/app
+      - ./shared:/app/shared
+
+  frontend:
+    build:
+      target: dev
+    ports:
+      - "5713:5713"
+    volumes:
+      - ./Frontend:/src/app
+      - /src/app/node_modules # anonymous volume prevents host override
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+      - WATCHPACK_POLLING=true
+      - VITE_API_URL=http://localhost:8000

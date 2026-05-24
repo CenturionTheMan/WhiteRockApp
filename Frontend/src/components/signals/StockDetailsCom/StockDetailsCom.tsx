@@ -192,6 +192,16 @@ const StockDetailsCom = ({ ticker }: { ticker: string }) => {
   }, [ticker, stockFetch.data, signalsFetch.data]);
   const isLoading = stockFetch.loading || signalsFetch.loading;
 
+  const toLocalDate = (d?: string | Date | null) => {
+    if (!d) return "-";
+
+    const date = new Date(d);
+
+    if (isNaN(date.getTime())) return "-";
+
+    return date.toLocaleDateString();
+  };
+
   const renderContent = () => {
     return (
       <>
@@ -205,7 +215,7 @@ const StockDetailsCom = ({ ticker }: { ticker: string }) => {
             <h3 className="text-style1 text-size1">
               {"$" + data?.prices.at(-1)?.price}
             </h3>
-            <span>Last updated: 14:00</span>
+            <span>Price from: {toLocalDate(data?.prices.at(-1)?.date)}</span>
           </div>
         </div>
 
