@@ -11,8 +11,8 @@ def run():
     predict_signals()
     
     scheduler = BlockingScheduler(timezone="UTC")
-    scheduler.add_job(fetch_market_data, "cron", hour=0, minute=0)
-    scheduler.add_job(predict_signals, "cron", hour=0, minute=30)
+    scheduler.add_job(fetch_market_data, "cron", hour=1, minute=30)
+    scheduler.add_job(predict_signals, "cron", hour=2, minute=00)
     scheduler.start()
 
 if __name__ == "__main__":
