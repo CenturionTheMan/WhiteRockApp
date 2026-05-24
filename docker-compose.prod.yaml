@@ -1,4 +1,7 @@
 services:
+  db:
+    restart: unless-stopped
+
   backend:
     build:
       target: prod
