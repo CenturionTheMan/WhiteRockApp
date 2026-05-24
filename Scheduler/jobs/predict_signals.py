@@ -18,41 +18,45 @@ def predict_signals():
 
     finally:
         db.close()
-    
-    
+        
 def _insert_predictions_for_today(db: Session):
     print("[] Generating todays predictions")
     
     stocks = db.query(db_rows.StockRow).all()
     now = datetime.now(timezone.utc)
+    
+    start_date = datetime(now.year, now.month, now.day, tzinfo=timezone.utc) + timedelta(days=-7) #last seven days  
     yesterday = datetime(now.year, now.month, now.day, tzinfo=timezone.utc) + timedelta(days=-1)
     
-    for stock in stocks:
-        signals = []
+    while start_date <= yesterday:    
+        for stock in stocks:
+            signals = []
+                
+            exist = db.query(db_rows.SignalRow).filter(
+                db_rows.SignalRow.stock_id == stock.id,
+                db_rows.SignalRow.timestamp == start_date
+            ).first()
             
-        exist = db.query(db_rows.SignalRow).filter(
-            db_rows.SignalRow.stock_id == stock.id,
-            db_rows.SignalRow.timestamp == yesterday
-        ).first()
-        
-        if exist:
-            continue
-        
-        is_success, pred_sig, confidence = __get_prediction_for_ticker(db, stock, yesterday)
-        if not is_success:
-            continue
+            if exist:
+                continue
             
-        signal = db_rows.SignalRow(
-            stock_id=stock.id,
-            timestamp=yesterday,
-            call=pred_sig,
-            confidence=confidence
-        )
-        signals.append(signal)
+            is_success, pred_sig, confidence = __get_prediction_for_ticker(db, stock, start_date)
+            if not is_success:
+                continue
+                
+            signal = db_rows.SignalRow(
+                stock_id=stock.id,
+                timestamp=start_date,
+                call=pred_sig,
+                confidence=confidence
+            )
+            signals.append(signal)
+                
+            print(f"    Generated signal from {start_date} for {stock.ticker}: {pred_sig}, with confidence {confidence*100}%")
+                
+            db.add_all(signals)
             
-        print(f"    Generated signal for {stock.ticker} - {pred_sig} with confidence {confidence*100}%")
-            
-        db.add_all(signals)
+        start_date += timedelta(days=1)
     db.commit()
     
 def __get_prices_data(db: Session, stock_id: int, from_date: datetime, to_date: datetime) -> List[CandleRow]:
