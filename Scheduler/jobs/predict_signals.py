@@ -38,7 +38,7 @@ def _insert_predictions_for_today(db: Session):
         if exist:
             continue
         
-        is_success, pred_sig, confidence = __get_prediction_for_ticker(stock.ticker, yesterday)
+        is_success, pred_sig, confidence = __get_prediction_for_ticker(db, stock, yesterday)
         if not is_success:
             continue
             

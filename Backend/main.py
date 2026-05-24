@@ -3,6 +3,7 @@ from shared import db_rows
 from shared.database import engine
 from routers import signals, stocks, prices, candles
 from fastapi.middleware.cors import CORSMiddleware
+from shared.database import init_db
 
 app = FastAPI()
 
@@ -14,7 +15,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-db_rows.Base.metadata.create_all(bind=engine, checkfirst=True) # TODO not for other than mock production
+init_db()
 
 app.include_router(stocks.router)
 app.include_router(candles.router)

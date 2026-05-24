@@ -4,6 +4,7 @@ from jobs.init_stocks import init_stocks
 from apscheduler.schedulers.blocking import BlockingScheduler # type: ignore
 from shared.database import engine
 from shared import db_rows
+from shared.database import init_db
 
 def run():
     print("[] Scheduler is alive")
@@ -18,5 +19,5 @@ def run():
     scheduler.start()
 
 if __name__ == "__main__":
-    db_rows.Base.metadata.create_all(bind=engine, checkfirst=True)
+    init_db()
     run()
