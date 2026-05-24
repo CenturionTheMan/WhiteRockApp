@@ -14,7 +14,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-db_rows.Base.metadata.create_all(bind=engine)  # TODO not for production
+db_rows.Base.metadata.create_all(bind=engine, checkfirst=True) # TODO not for other than mock production
 
 app.include_router(stocks.router)
 app.include_router(candles.router)
