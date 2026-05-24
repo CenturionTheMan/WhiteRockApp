@@ -69,7 +69,7 @@ def __get_prediction_for_ticker(db: Session, stock: db_rows.StockRow, date: date
     """
     
     WINDOWS_SIZE = 30
-    prices_data = __get_prices_data(db, stock.id, datetime - timedelta(days=WINDOWS_SIZE), datetime)
+    prices_data = __get_prices_data(db, stock.id, date + timedelta(days=-WINDOWS_SIZE), date)
     if prices_data[-1].timestamp.date() != date.date():
         print(f"    No price data for {stock.ticker} on {date.date()}, skipping signal generation")
         return False, "HOLD", Decimal("0.00")
