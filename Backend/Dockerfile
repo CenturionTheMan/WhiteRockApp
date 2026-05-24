@@ -1,18 +1,16 @@
-# ── base: shared deps ────────────────────────────────────────────────────────
 FROM python:3.12-slim AS base
 ENV PYTHONUNBUFFERED=1
 WORKDIR /app
-COPY requirements.txt .
+COPY Backend/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# ── dev: code is mounted via volume ──────────────────────────────────────────
 FROM base AS dev
-# No COPY needed — volume mount provides the code at runtime
+# code mounted via volume
 
-# ── prod: code baked in, gunicorn for concurrency ────────────────────────────
 FROM base AS prod
 RUN pip install --no-cache-dir gunicorn
-COPY . /app
+COPY Backend/ /app/
+COPY shared/ /app/shared/
 CMD ["gunicorn", "main:app", \
      "-w", "4", \
      "-k", "uvicorn.workers.UvicornWorker", \

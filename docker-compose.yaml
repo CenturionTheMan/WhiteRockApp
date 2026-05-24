@@ -21,8 +21,8 @@ services:
 
   backend:
     build:
-      context: ./Backend
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: Backend/Dockerfile
     networks:
       - app-net
     depends_on:
@@ -32,7 +32,9 @@ services:
       - DATABASE_URL=${DATABASE_URL}
 
   scheduler:
-    build: ./Scheduler
+    build:
+      context: .
+      dockerfile: Scheduler/Dockerfile
     networks:
       - app-net
     depends_on:
