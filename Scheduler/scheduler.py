@@ -2,6 +2,8 @@ from jobs.fetch_market_data import fetch_market_data
 from jobs.predict_signals import predict_signals
 from jobs.init_stocks import init_stocks
 from apscheduler.schedulers.blocking import BlockingScheduler # type: ignore
+from shared.database import engine
+from shared import db_rows
 
 def run():
     print("[] Scheduler is alive")
@@ -16,4 +18,5 @@ def run():
     scheduler.start()
 
 if __name__ == "__main__":
+    db_rows.Base.metadata.create_all(bind=engine, checkfirst=True)
     run()
